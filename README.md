@@ -308,3 +308,8 @@ killasgroup=true
 stderr_logfile=/var/log/flaskblog/flaskblog.err.log
 stdout_logfile=/var/log/flaskblog/flaskblog.out.log
 ```
+## Restart Nginx
+
+```
+sudo systemctl restart nginx
+```
