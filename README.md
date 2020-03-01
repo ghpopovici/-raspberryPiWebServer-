@@ -157,4 +157,154 @@ The official Python Package Index (PyPI) hosts files uploaded by package maintai
 
 piwheels is a service providing pre-compiled packages (called Python wheels) ready for use on the Raspberry Pi. Raspbian is pre-configured to use piwheels for pip. Read more about the piwheels project at [www.piwheels.org](www.piwheels.org).
 
+## Flask
+Flask is a micro web framework written in Python.
 
+A web framework (WF) or web application framework (WAF) is a software framework that is designed to support the development of web applications including web services, web resources, and web APIs. Web frameworks provide a standard way to build and deploy web applications on the World Wide Web. Web frameworks aim to automate the overhead associated with common activities performed in web development. For example, many web frameworks provide libraries for database access, templating frameworks, and session management, and they often promote code reuse.[1] Although they often target development of dynamic web sites, they are also applicable to static websites.
+
+The microframework Flask is based on the Pocoo projects Werkzeug and Jinja2.
+
+Werkzeug is a utility library for the Python programming language, in other words a toolkit for Web Server Gateway Interface (WSGI) applications, and is licensed under a BSD License. Werkzeug can realize software objects for request, response, and utility functions. It can be used to build a custom software framework on top of it and supports Python 2.6, 2.7 and 3.3.
+
+Jinja is a template engine for the Python programming language and is licensed under a BSD License. Similar to the Django web framework, it handles templates in a sandbox. 
+
+### Flask Installation 
+
+It is recommended to use the latest version of Python 3. Flask supports Python 3.5 and newer, Python 2.7, and PyPy.
+
+#### Virtual environments
+
+Use a virtual environment to manage the dependencies for your project, both in development and in production.
+
+What problem does a virtual environment solve? The more Python projects you have, the more likely it is that you need to work with different versions of Python libraries, or even Python itself. Newer versions of libraries for one project can break compatibility in another project.
+
+Virtual environments are independent groups of Python libraries, one for each project. Packages installed for one project will not affect other projects or the operating system’s packages.
+
+Python 3 comes bundled with the venv module to create virtual environments. If you’re using a modern version of Python, you can continue on to the next section.
+
+##### Create an environment
+
+Create a project folder and a venv folder within:
+
+`$ mkdir myproject`
+`$ cd myproject`
+`$ python3 -m venv venv`
+
+##### Activate the environment
+
+Before you work on your project, activate the corresponding environment:
+
+`$ . venv/bin/activate`
+
+##### Install Flask
+
+Within the activated environment, use the following command to install Flask:
+
+`$ pip install Flask`
+
+Flask is now installed.
+
+### A Minimal Application
+
+A minimal Flask application looks something like this:
+
+```
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+```
+
+So what did that code do?
+
+1. First we imported the Flask class. An instance of this class will be our WSGI application.
+
+2. Next we create an instance of this class. The first argument is the name of the application’s module or package. If you are using a single module (as in this example), you should use __name__ because depending on if it’s started as application or imported as module the name will be different ('__main__' versus the actual import name). This is needed so that Flask knows where to look for templates, static files, and so on. For more information have a look at the Flask documentation.
+
+3. We then use the route() decorator to tell Flask what URL should trigger our function.
+
+4. The function is given a name which is also used to generate URLs for that particular function, and returns the message we want to display in the user’s browser.
+
+Just save it as `hello.py` or something similar. Make sure to not call your application `flask.py` because this would conflict with Flask itself.
+
+To run the application you can either use the flask command or python’s -m switch with Flask. Before you can do that you need to tell your terminal the application to work with by exporting the FLASK_APP environment variable:
+
+```
+$ export FLASK_APP=hello.py
+$ flask run
+ * Running on http://127.0.0.1:5000/
+```
+
+Alternatively you can use *python -m flask*:
+
+```
+$ export FLASK_APP=hello.py
+$ python -m flask run
+ * Running on http://127.0.0.1:5000/
+```
+
+This launches a very simple builtin server, which is good enough for testing but probably not what you want to use in production. For deployment options see Deployment Options.
+
+## Gunicorn
+
+Gunicorn ‘Green Unicorn’ is a WSGI HTTP Server for UNIX. It’s a pre-fork worker model ported from Ruby’s Unicorn project. It supports both eventlet and greenlet. Running a Flask application on this server is quite simple:
+
+```
+  $ pip install gunicorn
+  $ cat myapp.py
+    def app(environ, start_response):
+        data = b"Hello, World!\n"
+        start_response("200 OK", [
+            ("Content-Type", "text/plain"),
+            ("Content-Length", str(len(data)))
+        ])
+        return iter([data])
+  $ gunicorn -w 4 myapp:app
+  [2014-09-10 10:22:28 +0000] [30869] [INFO] Listening at: http://127.0.0.1:8000 (30869)
+  [2014-09-10 10:22:28 +0000] [30869] [INFO] Using worker: sync
+  [2014-09-10 10:22:28 +0000] [30874] [INFO] Booting worker with pid: 30874
+  [2014-09-10 10:22:28 +0000] [30875] [INFO] Booting worker with pid: 30875
+  [2014-09-10 10:22:28 +0000] [30876] [INFO] Booting worker with pid: 30876
+  [2014-09-10 10:22:28 +0000] [30877] [INFO] Booting worker with pid: 30877
+```
+
+Gunicorn provides many command-line options – see gunicorn -h. For example, to run a Flask application with 4 worker processes (-w 4) binding to localhost port 4000 (-b 127.0.0.1:4000):
+
+```
+$ gunicorn -w 4 -b 127.0.0.1:4000 myproject:app
+```
+
+The gunicorn command expects the names of your application module or package and the application instance within the module. If you use the application factory pattern, you can pass a call to that:
+
+```
+$ gunicorn "myproject:create_app()"
+```
+
+## Supervisor: A Process Control System
+
+Supervisor is a client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems.
+
+```
+sudo apt install supervisor
+sudo nano /etc/supervisor/conf.d/flaskblog.conf
+sudo mkdir -p /var/log/flaskblog
+sudo touch /var/log/flaskblog/flaskblog.err.log
+sudo touch /varlog/flaskblog/flaskblog.out.log
+sudo supervisorctl reload
+```
+
+*flaskblog.conf*
+```
+[program:flaskblog]
+directory=/home/ghpopovici/workspace/Flask_blog
+command=/home/ghpopovici/workspace/Flask_blog/venv/bin/gunicorn -w 4 run:app
+user=ghpopovici
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+stderr_logfile=/var/log/flaskblog/flaskblog.err.log
+stdout_logfile=/var/log/flaskblog/flaskblog.out.log
+```
