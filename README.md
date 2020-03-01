@@ -69,8 +69,6 @@ SSH into the server running your HTTP website as a user with sudo privileges.
 
 Run this command on the command line on the machine to install Certbot.
 
-`sudo apt-get install certbot python-certbot-apache`
-
 `sudo apt-get install certbot python-certbot-nginx`
 
 #### Choose how to run Certbot
