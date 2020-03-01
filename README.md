@@ -149,7 +149,7 @@ Then install Python packages (e.g. simplejson) with pip3:
 
 `sudo pip3 install simplejson`
 
-Read more on installing software in Python [here] (https://www.raspberrypi.org/documentation/linux/software/python.md).
+Read more on installing software in Python [here](https://www.raspberrypi.org/documentation/linux/software/python.md).
 
 #### piwheels
 
