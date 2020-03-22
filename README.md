@@ -1,6 +1,6 @@
 # Setting up a Nginx web server
 
-You can use a web server on a Raspberry Pi to host a full website (locally on your network or globally on the internet), or just use it to display some information you wish to share to other machines on your network.
+You can use a web server on a Linux machine to host a full website (locally on your network or globally on the internet), or just use it to display some information you wish to share to other machines on your network.
 
 Various web servers are available, with different advantages for usage:
 
@@ -292,7 +292,6 @@ sudo nano /etc/supervisor/conf.d/flaskblog.conf
 sudo mkdir -p /var/log/flaskblog
 sudo touch /var/log/flaskblog/flaskblog.err.log
 sudo touch /varlog/flaskblog/flaskblog.out.log
-sudo supervisorctl reload
 ```
 
 *flaskblog.conf*
@@ -308,6 +307,13 @@ killasgroup=true
 stderr_logfile=/var/log/flaskblog/flaskblog.err.log
 stdout_logfile=/var/log/flaskblog/flaskblog.out.log
 ```
+
+## Restart Supervisor
+
+```
+sudo supervisorctl reload
+```
+
 ## Restart Nginx
 
 ```
