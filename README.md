@@ -292,7 +292,6 @@ sudo nano /etc/supervisor/conf.d/flaskblog.conf
 sudo mkdir -p /var/log/flaskblog
 sudo touch /var/log/flaskblog/flaskblog.err.log
 sudo touch /varlog/flaskblog/flaskblog.out.log
-sudo supervisorctl reload
 ```
 
 *flaskblog.conf*
@@ -308,6 +307,13 @@ killasgroup=true
 stderr_logfile=/var/log/flaskblog/flaskblog.err.log
 stdout_logfile=/var/log/flaskblog/flaskblog.out.log
 ```
+
+## Restart Supervisor
+
+```
+sudo supervisorctl reload
+```
+
 ## Restart Nginx
 
 ```
